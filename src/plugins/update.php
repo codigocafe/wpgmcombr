@@ -11,21 +11,11 @@ class GmThemeUpdater {
 			return;
 		}
 
-		add_filter(
-			"update_themes_{$hostname}",
-			array( $this, 'get_update' ),
-			10,
-			4
-		);
+		add_filter("update_themes_{$hostname}", [$this, 'get_update'], 10, 4);
 	}
 
-	public function get_update( $update, array $theme_data, string $theme_stylesheet, array $locales ) {
-		$response = wp_remote_get(
-			self::UPDATE_URL,
-			array(
-				'timeout' => 10,
-			)
-		);
+	public function get_update( array|false $update, array $theme_data, string $theme_stylesheet, array $locales ) {
+		$response = wp_remote_get( self::UPDATE_URL, ['timeout' => 10] );
 
 		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 			return $update;
